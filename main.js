@@ -88,7 +88,7 @@ console.log("START");
   });
   actions = JSON.parse(actions);
   const browser = await puppeteer.launch({
-    headless: true,
+    headless: process.env.HEADLESS === 'true',
     args: [
       '--no-sandbox',
       '--disable-setuid-sandbox'
@@ -100,7 +100,7 @@ console.log("START");
   //   navigation: 10000, 
   //   waitForSelector: 12000,
   // });
-  await page.goto("https://www.messenger.com/t/1037102783049142");
+  await page.goto(`https://www.messenger.com/t/${process.env.CONV_ID}`);
   await page.evaluate(text => {
     document.getElementById("email").value = text;
   }, process.env.MAIL);
