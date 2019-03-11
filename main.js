@@ -118,6 +118,22 @@ async function startBot() {
     args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
   const page = await browser.newPage();
+  if (process.env.ENV === "prod") {
+    app.get("/", (x, res) => {
+      res.send("Conv bot is alive!");
+    });
+    app.get("/restart", (x, res) => {
+      res.send("Restart triggered !");
+      restart(page, "@RESTART");
+    });
+    app.listen(process.env.PORT, () => {
+      console.log(
+        chalk.green.inverse(
+          ` - ALIVE PAGE IS NOW RUNNING ON PORT ${process.env.PORT} - `
+        )
+      );
+    });
+  }
   console.log(
     chalk.cyan.bold(" -> Navigating to : "),
     `https://www.messenger.com/t/${process.env.CONV_ID}`,
@@ -177,16 +193,3 @@ process.on("unhandledRejection", (reason, p) => {
 });
 
 startBot();
-
-if (process.env.ENV === "prod") {
-  app.get("/", (x, res) => {
-    res.send("Conv bot is alive!");
-  });
-  app.listen(process.env.PORT, () => {
-    console.log(
-      chalk.green.inverse(
-        ` - ALIVE PAGE IS NOW RUNNING ON PORT ${process.env.PORT} - `
-      )
-    );
-  });
-}
