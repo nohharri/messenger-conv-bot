@@ -179,7 +179,7 @@ process.on("unhandledRejection", (reason, p) => {
 startBot();
 
 if (process.env.ENV === "prod") {
-  app.get("/", res => {
+  app.get("/", (x, res) => {
     res.send("Conv bot is alive!");
   });
   app.listen(process.env.PORT, () => {
