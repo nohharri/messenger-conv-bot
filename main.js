@@ -1,19 +1,18 @@
-require('dotenv').config()
+require("dotenv").config();
 const puppeteer = require("puppeteer");
 const fs = require("fs");
 const request = require("request-promise");
-const express = require('express');
+const express = require("express");
+const chalk = require("chalk");
 const app = express();
 
-let actions = [];
-
-function actionParser(txt) {
+function actionParser(txt, actions) {
   return new Promise(resolve => {
     for (let action of actions) {
       if (action.trigger.type === "text" && action.trigger.content === txt) {
         return resolve(action);
       }
-    };
+    }
     return resolve(null);
   });
 }
@@ -45,7 +44,6 @@ async function applyTags(page, tags) {
 
 async function applyAttachement(page, link) {
   if (link) {
-    console.log("There is a link", link);
     await page.keyboard.type(` ${link}`);
     await page.waitFor(".fbNubFlyoutAttachments");
   }
@@ -54,7 +52,6 @@ async function applyAttachement(page, link) {
 async function uploadPicture(page, upload) {
   if (upload && upload.length > 0) {
     const r = Math.floor(Math.random() * upload.length);
-    console.log("UPLOAD");
     const fileData = await request({
       uri: upload[r],
       encoding: null
@@ -68,39 +65,50 @@ async function uploadPicture(page, upload) {
 async function fetchApi(page, fetch) {
   if (fetch) {
     let data = await request({
-      uri: fetch.apiUrl,
+      uri: fetch.apiUrl
     });
     data = JSON.parse(data);
     fetch.dataPath.forEach(path => {
       data = data[path];
     });
-    console.log(data);
     await uploadPicture(page, [data]);
   }
 }
 
+async function handleHelp(page, lastMessage, actions) {
+  if (lastMessage === "@help") {
+    await focusInput(page);
+    await typeText(page, "AVAILABLE COMMANDS: ");
+    for (let action of actions) {
+      await typeText(page, `${action.trigger.content}, `);
+    }
+    await page.keyboard.press("Enter");
+  }
+}
 
-console.log("START");
-
-(async () => {
-  actions = await request({
-    uri: process.env.ACTIONS_URL,
+async function startBot() {
+  console.log(
+    chalk.cyan.bold(" -> Fetching actions on: "),
+    process.env.ACTIONS_URL,
+    chalk.cyan.bold(" ...")
+  );
+  let actions = await request({
+    uri: process.env.ACTIONS_URL
   });
   actions = JSON.parse(actions);
+  console.log(chalk.cyan.bold(" -> Opening browser..."));
   const browser = await puppeteer.launch({
-    headless: process.env.HEADLESS === 'true',
-    args: [
-      '--no-sandbox',
-      '--disable-setuid-sandbox'
-  ]
+    headless: process.env.HEADLESS === "true",
+    args: ["--no-sandbox", "--disable-setuid-sandbox"]
   });
   const page = await browser.newPage();
-  console.log("PAGE OPENED");
-  // page.setDefaultTimeout({
-  //   navigation: 10000, 
-  //   waitForSelector: 12000,
-  // });
+  console.log(
+    chalk.cyan.bold(" -> Navigating to : "),
+    `https://www.messenger.com/t/${process.env.CONV_ID}`,
+    chalk.cyan.bold(" ...")
+  );
   await page.goto(`https://www.messenger.com/t/${process.env.CONV_ID}`);
+  console.log(chalk.cyan.bold(" -> Loging in..."));
   await page.evaluate(text => {
     document.getElementById("email").value = text;
   }, process.env.MAIL);
@@ -108,9 +116,10 @@ console.log("START");
     document.getElementById("pass").value = text;
   }, process.env.PASS);
   await page.evaluate(() => document.getElementById("loginbutton").click());
-  console.log("LOGGED IN");
+  console.log(chalk.cyan.bold(" -> Waiting for conversation to load..."));
   await page.waitForNavigation();
   await page.waitFor(".__i_");
+
   let saved = null;
   while (true) {
     let lastMessage = await page.evaluate(() => {
@@ -118,19 +127,18 @@ console.log("START");
       return Promise.resolve(a[a.length - 1].textContent);
     });
     if (lastMessage !== saved) {
-      console.log("Potential command:", lastMessage);
+      console.log(
+        chalk.magenta.bold("    # Message: "),
+        chalk.italic(lastMessage)
+      );
       saved = lastMessage;
-      if (lastMessage === '@help') {
-        await focusInput(page);
-        await typeText(page, 'AVAILABLE COMMANDS: ');
-        for (let action of actions) {
-          await typeText(page, `${action.trigger.content}, `);
-        }
-        await page.keyboard.press("Enter");
-      }
-      let action = await actionParser(lastMessage);
-      console.log("ACTION:", action);
+      await handleHelp(page, lastMessage, actions);
+      let action = await actionParser(lastMessage, actions);
       if (action) {
+        console.log(
+          chalk.red.bold("      ACTION ->"),
+          chalk.italic(action.name)
+        );
         await focusInput(page);
         await applyTags(page, action.tags);
         await typeText(page, action.text);
@@ -142,11 +150,30 @@ console.log("START");
     }
     await page.waitFor(500);
   }
-})();
+}
 
-app.get('/', function (req, res) {
-  res.send('Alive!');
-})
-app.listen(process.env.PORT, function () {
-  console.log('Example app listening on port 3000!');
-})
+function keepAlive() {
+  console.log(chalk.green.inverse(" - CONV BOT IS NOW STARTING - "));
+  try {
+    startBot();
+  } catch (error) {
+    console.log(chalk.red.inverse(" - CONV BOT CRASHED - "));
+    console.log(error);
+    keepAlive();
+  }
+}
+
+keepAlive();
+
+if (process.env.ENV === "prod") {
+  app.get("/", res => {
+    res.send("Conv bot is alive!");
+  });
+  app.listen(process.env.PORT, () => {
+    console.log(
+      chalk.green.inverse(
+        ` - ALIVE PAGE IS NOW RUNNING ON PORT ${process.env.PORT} - `
+      )
+    );
+  });
+}
