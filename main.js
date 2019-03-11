@@ -123,7 +123,7 @@ async function startBot() {
   let saved = null;
   while (true) {
     let lastMessage = await page.evaluate(() => {
-      a = document.getElementsByClassName("_3058");
+      a = document.getElementsByClassName("_58nk");
       return Promise.resolve(a[a.length - 1].textContent);
     });
     if (lastMessage !== saved) {
