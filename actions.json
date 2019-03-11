@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Daily Fred",
+    "trigger": {
+      "type": "text",
+      "content": "@dailyoyan"
+    },
+    "upload": [
+      "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.15752-9/52459033_2147539375326409_5802182254876688384_n.jpg?_nc_cat=101&_nc_ht=scontent-cdg2-1.xx&oh=18dda671ddf9043d3701d847192402b0&oe=5CDDFD89",
+      "https://scontent-cdg2-1.xx.fbcdn.net/v/t1.15752-9/52474460_1682860965193553_8690086224251060224_n.jpg?_nc_cat=102&_nc_ht=scontent-cdg2-1.xx&oh=df268f8ea04b9b85aa4eb47a5e6df6e3&oe=5D11CC52"
+    ]
+  },
+  {
+    "name": "Oyan Joke",
+    "trigger": {
+      "type": "text",
+      "content": "@oyanjoke"
+    },
+    "text": "raconte nous une blague !",
+    "tags": ["@Dylan"]
+  }
+]
