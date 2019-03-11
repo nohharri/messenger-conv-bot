@@ -1,0 +1,5 @@
+MAIL=my@mail.com
+PASS=supersecret
+CONV_ID=2948244144952918
+HEADLESS=false
+ACTIONS_URL=https://raw.githubusercontent.com/my_username/my_repo/master/actions.json
