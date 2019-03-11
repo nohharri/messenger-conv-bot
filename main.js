@@ -86,7 +86,23 @@ async function handleHelp(page, lastMessage, actions) {
   }
 }
 
+async function restart(page, lastMessage) {
+  if (lastMessage === "@RESTART") {
+    await focusInput(page);
+    await typeText(page, "Restarting...");
+    await page.keyboard.press("Enter");
+    throw new Error("Hard reset");
+  }
+}
+
+async function helloWorld(page) {
+  await focusInput(page);
+  await typeText(page, "Hello World !");
+  await page.keyboard.press("Enter");
+}
+
 async function startBot() {
+  console.log(chalk.green.inverse(" - CONV BOT IS NOW STARTING - "));
   console.log(
     chalk.cyan.bold(" -> Fetching actions on: "),
     process.env.ACTIONS_URL,
@@ -119,6 +135,7 @@ async function startBot() {
   console.log(chalk.cyan.bold(" -> Waiting for conversation to load..."));
   await page.waitForNavigation();
   await page.waitFor(".__i_");
+  await helloWorld(page);
 
   let saved = null;
   while (true) {
@@ -133,6 +150,7 @@ async function startBot() {
       );
       saved = lastMessage;
       await handleHelp(page, lastMessage, actions);
+      await restart(page, lastMessage);
       let action = await actionParser(lastMessage, actions);
       if (action) {
         console.log(
@@ -152,18 +170,13 @@ async function startBot() {
   }
 }
 
-function keepAlive() {
-  console.log(chalk.green.inverse(" - CONV BOT IS NOW STARTING - "));
-  try {
-    startBot();
-  } catch (error) {
-    console.log(chalk.red.inverse(" - CONV BOT CRASHED - "));
-    console.log(error);
-    keepAlive();
-  }
-}
+process.on("unhandledRejection", (reason, p) => {
+  console.log(chalk.red.inverse(" - CONV BOT CRASHED - "));
+  console.log("Unhandled Rejection at: Promise", p, "reason:", reason);
+  startBot();
+});
 
-keepAlive();
+startBot();
 
 if (process.env.ENV === "prod") {
   app.get("/", res => {
