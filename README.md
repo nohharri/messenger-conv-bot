@@ -8,15 +8,21 @@ Messenger Conv Bot allows you to launch a headless puppeteer chrome browser that
 # How to use it ?
 
 First install all the dependencies with ```yarn install```
+
 Then create a ```.env``` file following the ```.envExample``` to setup all the necessary env variables required to lauch the bot.
+
 Finally just ```yarn start``` to launch the bot.
 
 # Required env variables
 
 ```MAIL``` : your fb user email
+
 ```PASS``` : your fb user password
+
 ```CONV_ID``` : the messenger conversation id where you want the bot to act (ie : https://www.messenger.com/t/1737195323049141 => the id is 1737195323049141)
+
 ```HEADLESS``` : true of false depending on if you want to visualize the chrome navigator or not
+
 ```ACTIONS_URL``` : a url targeting a raw JSON file that the bot will be using as it's actions list
 
 # How to configure the actions ?
