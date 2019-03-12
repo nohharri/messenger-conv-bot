@@ -89,8 +89,8 @@ module.exports = class NavigationManager {
       })
       .on("SERVER ERROR", console.log);
 
-    webhookHandler.on("event", (repo, data) => {
-      console.log("Webhook event", data);
+    webhookHandler.on('*', (event, repo, data) => {
+      console.log("Webhook event", event, repo, data);
       this.loadActions();
     });
 
