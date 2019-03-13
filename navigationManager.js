@@ -91,11 +91,11 @@ module.exports = class NavigationManager {
       .on("SERVER ERROR", console.log);
 
     webhookHandler.on('*', async (event, repo, data) => {
-      console.log("Webhook event", event, data.author);
+      console.log("Webhook event", event, data.commits[0].author);
       if (event === 'push') {
         await this.loadActions();
         await utils.focusInput(this.page);
-        await utils.typeText(this.page, `New actions availables ! Pushed by ${data.author.name}`);
+        await utils.typeText(this.page, `New actions availables ! Pushed by ${data.commits[0].author.name}`);
         await this.page.keyboard.press("Enter");
       }
     });
