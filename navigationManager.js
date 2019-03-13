@@ -91,7 +91,7 @@ module.exports = class NavigationManager {
       .on("SERVER ERROR", console.log);
 
     webhookHandler.on('*', async (event, repo, data) => {
-      console.log("Webhook event", event, author);
+      console.log("Webhook event", event, data.author);
       if (event === 'push') {
         await this.loadActions();
         await utils.focusInput(this.page);
