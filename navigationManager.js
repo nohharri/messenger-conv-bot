@@ -9,6 +9,7 @@ const utils = require("./utils.js")
 module.exports = class NavigationManager {
   constructor(afterCrash = false) {
     console.log(chalk.green.inverse(" - CONV BOT CREATED - "));
+    this.running = true;
     this.afterCrash = afterCrash;
     this.actions = null;
     this.browser = null;
@@ -89,10 +90,13 @@ module.exports = class NavigationManager {
       })
       .on("SERVER ERROR", console.log);
 
-    webhookHandler.on('*', (event, repo, data) => {
-      console.log("Webhook event", event);
+    webhookHandler.on('*', async (event, repo, data) => {
+      console.log("Webhook event", event, author);
       if (event === 'push') {
-        this.loadActions();
+        await this.loadActions();
+        await utils.focusInput(this.page);
+        await utils.typeText(this.page, `New actions availables ! Pushed by ${data.author.name}`);
+        await this.page.keyboard.press("Enter");
       }
     });
 
@@ -106,7 +110,7 @@ module.exports = class NavigationManager {
       const msgs = document.getElementsByClassName("_58nk");
       return msgs[msgs.length - 1].textContent;
     })
-    .catch(err => console.log('ERROR in readLastMessage', err));
+    .catch(() => { this.running = true; });
     if (msg === this.savedMessage) {
       return null;
     }
@@ -160,7 +164,7 @@ module.exports = class NavigationManager {
   }
 
   async start() {
-    while (true) {
+    while (this.running) {
       const message = await this.lastMessage();
       if (message) {
         console.log(
