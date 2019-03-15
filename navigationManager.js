@@ -15,6 +15,7 @@ module.exports = class NavigationManager {
     this.browser = null;
     this.page = null;
     this.savedMessage = null;
+    this.server = null;
   }
 
   loadActions() {
@@ -80,7 +81,7 @@ module.exports = class NavigationManager {
     app.get('/', (x, res) => {
       res.send('Conv bot is alive!');
     });
-    app
+    this.server = app
       .listen(process.env.PORT, () => {
         console.log(
           chalk.green.inverse(
@@ -89,6 +90,10 @@ module.exports = class NavigationManager {
         );
       })
       .on('SERVER ERROR', console.log);
+    app.get('/death', (req, res) => {
+      res.send('Killing the bot');
+      this.server.close();
+    });
 
     webhookHandler.on('*', async (event, repo, data) => {
       console.log('Webhook event', event, data.commits[0].author);
