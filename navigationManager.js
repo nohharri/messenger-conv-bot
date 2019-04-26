@@ -22,7 +22,7 @@ module.exports = class NavigationManager {
     console.log(
       chalk.cyan.bold(' -> Fetching actions on: '),
       process.env.ACTIONS_URL,
-      chalk.cyan.bold(' ...'),
+      chalk.cyan.bold('...'),
     );
     return request({
       uri: process.env.ACTIONS_URL,
