@@ -25,7 +25,19 @@ module.exports = class NavigationManager {
       chalk.cyan.bold('...'),
     );
     return request({
-      uri: process.env.ACTIONS_URL,
+      //uri: process.env.ACTIONS_URL,
+      uri:
+        [
+          {
+            "name": "Action that tag some friends", // Just name your action
+            "trigger": {
+              "type": "text", // The bot will be looking for a full match of 'content'
+              "content": "@tagMyFriends" // The trigger string
+            },
+            "text": "Can you answer me guys ?", // A text to be typed as a message
+            "tags": ["@First Friend Name", "@Other Name"] // List of names to tag in the conversation (only works for group chats)
+          },
+        ]
     })
       .then(res => {
         this.actions = JSON.parse(res);
@@ -61,12 +73,14 @@ module.exports = class NavigationManager {
     );
     console.log(chalk.cyan.bold(' -> Waiting for conversation to load...'));
     await this.page.waitForNavigation();
-    await this.page.waitFor('.__i_');
-    if (this.afterCrash) {
-      await utils.focusInput(this.page);
-      await utils.typeText(this.page, 'I just crashed, sorry...');
-      await this.page.keyboard.press('Enter');
-    }
+    console.log('Navigation has happened.');
+    //await this.page.waitFor('oo9gr5id', { timeout: 0 });
+    console.log('Wait for has happened.');
+    // if (this.afterCrash) {
+    //   await utils.focusInput(this.page);
+    //   await utils.typeText(this.page, 'I just crashed, sorry...');
+    //   await this.page.keyboard.press('Enter');
+    // }
   }
 
   launchProdServer() {
@@ -116,7 +130,7 @@ module.exports = class NavigationManager {
   async lastMessage() {
     const msg = await this.page
       .evaluate(() => {
-        const msgs = document.getElementsByClassName('_58nk');
+        const msgs = document.getElementsByClassName('l60d2q6s d1544ag0 sj5x9vvc tw6a2znq l9j0dhe7 ni8dbmo4 stjgntxs qlfml3jp inkptoze jk6sbkaj qmr60zad jm1wdb64 qv66sw1b ljqsnud1 g6srhlxm odn2s2vf');
         return msgs[msgs.length - 1].textContent;
       })
       .catch(() => {
@@ -153,23 +167,27 @@ module.exports = class NavigationManager {
 
   async actionParser(message) {
     return new Promise(async resolve => {
-      for (let action of this.actions) {
-        const isAction = this.checkIsAction(message, action);
-        if (isAction) {
+      //for (let action of this.actions) {
+        //const isAction = this.checkIsAction(message, action);
+        //if (isAction) {
           console.log(
             chalk.red.bold('      ACTION ->'),
-            chalk.italic(action.name),
+            //chalk.italic(action.name),
           );
           await utils.focusInput(this.page);
-          await utils.applyTags(this.page, action.tags);
-          await utils.typeText(this.page, action.text);
-          await utils.applyAttachement(this.page, action.link);
-          await utils.uploadRandomPicture(this.page, action.upload);
-          await utils.fetchApi(this.page, action.fetchApi);
+
+          // testing
+          await utils.typeText(this.page, 'Is this Jake Marples?');
+
+          //await utils.applyTags(this.page, action.tags);
+          //await utils.typeText(this.page, action.text);
+          //await utils.applyAttachement(this.page, action.link);
+          //await utils.uploadRandomPicture(this.page, action.upload);
+          //await utils.fetchApi(this.page, action.fetchApi);
           await this.page.keyboard.press('Enter');
           return resolve();
-        }
-      }
+        //}
+      //}
       return resolve();
     });
   }

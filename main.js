@@ -4,12 +4,15 @@ const NavigationManager = require('./navigationManager');
 
 let nm = null;
 
+/**
+ * Entry point for the app.
+ */
 async function startBot(hasCrashed = false) {
   nm = new NavigationManager(hasCrashed);
   if (process.env.ENV === 'prod') {
     nm.launchProdServer();
   }
-  await nm.loadActions();
+  //await nm.loadActions();
   await nm.initConvPage();
   await nm.start();
 }

@@ -2,6 +2,7 @@ const request = require("request-promise");
 const fs = require("fs");
 
 async function focusInput(page) {
+  // _1mf represents the class.
   await page.evaluate(() => document.getElementsByClassName("_1mf")[0].click());
 }
 
