@@ -84,23 +84,6 @@
         "tags": []
     },
     {
-        "name": "Gets Vision's attention", 
-        "blacklist": [],
-        "trigger": {
-            "type": "text",
-            "phrases": {
-                "👀": true
-            }
-        },
-        "content": [
-            {
-                "type": "text",
-                "data": "You rang?"
-            }
-        ],
-        "tags": []
-    },
-    {
         "name": "This tests emojis.", 
         "blacklist": [],
         "trigger": {
