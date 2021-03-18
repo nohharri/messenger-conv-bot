@@ -49,6 +49,25 @@
         "tags": []
     },
     {
+        "name": "Action that makes Vision pop up", 
+        "blacklist": [],
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "see": true,
+                "look": true,
+                "vision": true
+            }
+        },
+        "content": [
+            {
+                "type": "text",
+                "data": "👀"
+            }
+        ] ,
+        "tags": []
+    },
+    {
         "name": "Action that detects wrong chat for PCU.", 
         "blacklist": [1693212714050767],
         "trigger": {
