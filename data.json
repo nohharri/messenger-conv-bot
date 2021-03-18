@@ -1,0 +1,35 @@
+[
+    {
+        "name": "Action that tag some friends", 
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "Deepak": true,
+                "Kumar": true
+            }
+        },
+        "text": "Deepak", 
+        "tags": ["@First Friend Name", "@Other Name"]
+    },
+    {
+        "name": "Action that introduces Vision.", 
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "@vision": true,
+                "Lolol" : true
+            }
+        },
+        "content": [
+            {
+                "type": "text",
+                "data": "Hello, my name is Vision. \n Use @help to learn more about my commands."
+            },
+            {
+                "type": "gif",
+                "data": "vision"
+            }
+        ] ,
+        "tags": ["@First Friend Name", "@Other Name"]
+    }
+]

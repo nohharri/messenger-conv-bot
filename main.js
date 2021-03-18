@@ -12,7 +12,7 @@ async function startBot(hasCrashed = false) {
   if (process.env.ENV === 'prod') {
     nm.launchProdServer();
   }
-  //await nm.loadActions();
+  await nm.loadActions();
   await nm.initConvPage();
   await nm.start();
 }

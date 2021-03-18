@@ -5,6 +5,7 @@ const bodyParser = require('body-parser');
 const chalk = require('chalk');
 const request = require('request-promise');
 const utils = require('./utils.js');
+const Chatbot = require('./Chatbot.js');
 
 module.exports = class NavigationManager {
   constructor(afterCrash = false) {
@@ -16,36 +17,11 @@ module.exports = class NavigationManager {
     this.page = null;
     this.savedMessage = null;
     this.server = null;
+    this.chatbot = new Chatbot();
   }
 
-  loadActions() {
-    console.log(
-      chalk.cyan.bold(' -> Fetching actions on: '),
-      process.env.ACTIONS_URL,
-      chalk.cyan.bold('...'),
-    );
-    return request({
-      //uri: process.env.ACTIONS_URL,
-      uri:
-        [
-          {
-            "name": "Action that tag some friends", // Just name your action
-            "trigger": {
-              "type": "text", // The bot will be looking for a full match of 'content'
-              "content": "@tagMyFriends" // The trigger string
-            },
-            "text": "Can you answer me guys ?", // A text to be typed as a message
-            "tags": ["@First Friend Name", "@Other Name"] // List of names to tag in the conversation (only works for group chats)
-          },
-        ]
-    })
-      .then(res => {
-        this.actions = JSON.parse(res);
-        return true;
-      })
-      .catch(err => {
-        console.log('Error in loadActions', err);
-      });
+  async loadActions() {
+    this.chatbot.loadActions();
   }
 
   async initConvPage() {
@@ -200,8 +176,9 @@ module.exports = class NavigationManager {
           chalk.magenta.bold('    # Message: '),
           chalk.italic(message),
         );
-        const isBuiltIn = await this.builtInCommands(message);
-        if (!isBuiltIn) await this.actionParser(message);
+        await this.chatbot.performAction(message, this.page);
+        // const isBuiltIn = await this.builtInCommands(message);
+        // if (!isBuiltIn) await this.actionParser(message);
       }
       await this.page.waitFor(500);
     }

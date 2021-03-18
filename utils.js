@@ -81,6 +81,35 @@ async function handleHelp(page, actions) {
   await page.keyboard.press("Enter");
 }
 
+async function click(page, className, isQuery = false) {
+  console.log("className is " + className);
+
+  if (isQuery) {
+    await page.evaluate((name) => document.querySelector(name).click(), className);
+  } else {
+    await page.evaluate((name) => document.getElementsByClassName(name)[0].click(), className);
+  }
+}
+
+async function sendGif(page, text) {
+  
+  await click(page, "oajrlxb2 gs1a9yip g5ia77u1 mtkw9kbi tlpljxtp qensuy8j ppp5ayq2 goun2846 ccm00jje s44p3ltw mk2mc5f4 rt8b4zig n8ej3o3l agehan2d sk4xxmp2 rq0escxv nhd2j8a9 pq6dq46d mg4g778l btwxx1t3 pfnyh3mw p7hjln8o kvgmc6g5 cgat1ltu sw24d88r kkf49tns tgvbjcpo hpfvmrgz ecm0bbzt ph5uu5jm e5nlhep0 b3onmgus l9j0dhe7 i1ao9s8h esuyzwwr f1sip0of du4w35lb lzcic4wl abiwlrkh p8dawk7l");
+
+  // Click gif button
+  await click(page, '[aria-label="Choose a gif"', true);
+  await page.waitFor(2000);
+  await click(page, '[aria-label="GIF search"', true);
+  await page.waitFor(2000);
+  await typeText(page, text);
+  await page.waitFor(2000);
+  await click(page, '[alt="GIF"]', true);
+
+
+  // Click gif
+  //await click(page, "oajrlxb2 gs1a9yip g5ia77u1 mtkw9kbi tlpljxtp qensuy8j ppp5ayq2 goun2846 ccm00jje s44p3ltw mk2mc5f4 rt8b4zig n8ej3o3l agehan2d sk4xxmp2 rq0escxv nhd2j8a9 pq6dq46d mg4g778l btwxx1t3 pfnyh3mw p7hjln8o kvgmc6g5 cxmmr5t8 oygrvhab hcukyx3x tgvbjcpo hpfvmrgz jb3vyjys rz4wbd8a qt6c0cv9 a8nywdso l9j0dhe7 i1ao9s8h esuyzwwr f1sip0of du4w35lb lzcic4wl abiwlrkh p8dawk7l");
+
+}
+
 // async function restart(page, lastMessage) {
 //   if (lastMessage === "@RESTART") {
 //     await focusInput(page);
@@ -104,3 +133,4 @@ module.exports.uploadRandomPicture = uploadRandomPicture;
 module.exports.fetchApi = fetchApi;
 module.exports.handleHelp = handleHelp;
 module.exports.helloWorld = helloWorld;
+module.exports.sendGif = sendGif;
