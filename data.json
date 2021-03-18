@@ -1,6 +1,7 @@
 [
     {
         "name": "Action that tags Rohan Mehta", 
+        "blacklist": [],
         "trigger": {
             "type": "text",
             "phrases": {
@@ -13,6 +14,7 @@
     },
     {
         "name": "Action that tags Deepak Kumar", 
+        "blacklist": [],
         "trigger": {
             "type": "text",
             "phrases": {
@@ -25,6 +27,7 @@
     },
     {
         "name": "Action that introduces Vision.", 
+        "blacklist": [],
         "trigger": {
             "type": "text",
             "phrases": {
@@ -61,6 +64,61 @@
                 "data": "Wrong chat haha. Maybe you should try PCU: https://www.messenger.com/t/1693212714050767"
             }
         ] ,
+        "tags": []
+    },
+    {
+        "name": "Pulls up the help menu.", 
+        "blacklist": [],
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "@help": true
+            }
+        },
+        "content": [
+            {
+                "type": "text",
+                "data": "Hello, my name is Vision. I am a bot that aids in everyday activities. I don't have any built in commands yet, but I will listen to specific keywords."
+            }
+        ],
+        "tags": []
+    },
+    {
+        "name": "This tests emojis.", 
+        "blacklist": [],
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "@emoji": true
+            }
+        },
+        "content": [
+            {
+                "type": "text",
+                "data": "🥴"
+            }
+        ],
+        "tags": []
+    },
+    {
+        "name": "Detects spoilers.", 
+        "blacklist": [],
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "gabi": true,
+                "eren": true,
+                "jaeger": true,
+                "titan": true,
+                "aot": true
+            }
+        },
+        "content": [
+            {
+                "type": "text",
+                "data": "SPOILER WARNING \n SPOILER WARNING \n SPOILER WARNING \n SPOILER WARNING \n There may be spoilers above. Look at your own risk."
+            }
+        ],
         "tags": []
     }
 ]
