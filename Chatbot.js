@@ -47,7 +47,7 @@ module.exports = class Chatbot {
     async performAction(message, page) {
         return new Promise(async resolve => {
 
-            const messageArr = message.split();
+            const messageArr = message.toLowerCase().trim().split(" ");
             let action = null;
             let wordFound = false;
             // Get correct action by finding a matching phrase
@@ -66,13 +66,20 @@ module.exports = class Chatbot {
 
             if (!wordFound) return resolve();
 
+            if (action.tags && action.tags.length > 0) {
+                await utils.applyTags(page, action.tags);
+                await page.waitFor(2000);
+                await page.keyboard.press('Enter');
+                await page.waitFor(2000);
+                await page.keyboard.press('Enter');
+            }
             if (action.content) {
                 console.log(
                     chalk.red.bold('      ACTION ->'),
                     chalk.italic(action.name),
                 );
                 for (let content of action.content) {
-                    if (content.type === 'text') {
+                    if (content.type === 'text' && !action.blacklist.includes(process.env.CONV_ID)) {
                         await utils.focusInput(page);
                         await utils.typeText(page, content.data);
                         await page.keyboard.press('Enter');

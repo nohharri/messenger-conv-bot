@@ -1,15 +1,27 @@
 [
     {
-        "name": "Action that tag some friends", 
+        "name": "Action that tags Rohan Mehta", 
         "trigger": {
             "type": "text",
             "phrases": {
-                "Deepak": true,
-                "Kumar": true
+                "rohan": true,
+                "mehta": true
             }
         },
-        "text": "Deepak", 
-        "tags": ["@First Friend Name", "@Other Name"]
+        "content": [],
+        "tags": ["@Rohan Mehta"]
+    },
+    {
+        "name": "Action that tags Deepak Kumar", 
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "deepak": true,
+                "kumar": true
+            }
+        },
+        "content": [],
+        "tags": ["@Deepak Kumar"]
     },
     {
         "name": "Action that introduces Vision.", 
@@ -17,7 +29,8 @@
             "type": "text",
             "phrases": {
                 "@vision": true,
-                "Lolol" : true
+                "@viz jarvis": true,
+                "@viz": true
             }
         },
         "content": [
@@ -30,6 +43,24 @@
                 "data": "vision"
             }
         ] ,
-        "tags": ["@First Friend Name", "@Other Name"]
+        "tags": []
+    },
+    {
+        "name": "Action that detects wrong chat for PCU.", 
+        "blacklist": [1693212714050767],
+        "trigger": {
+            "type": "text",
+            "phrases": {
+                "marvel": true,
+                "mcu": true
+            }
+        },
+        "content": [
+            {
+                "type": "text",
+                "data": "Wrong chat haha. Maybe you should try PCU: https://www.messenger.com/t/1693212714050767"
+            }
+        ] ,
+        "tags": []
     }
 ]

@@ -8,14 +8,17 @@ async function focusInput(page) {
 
 async function applyTag(page, tag) {
   await page.keyboard.type(tag);
-  await page.waitFor(
-    () =>
-      document
-        .getElementsByClassName("_5rpu")[0]
-        .getAttribute("aria-expanded") === "true"
-  )
-  .then(() => page.keyboard.press("Enter"))
-  .catch(err => console.log('ERROR', err));
+  // await page.waitFor(
+  //   () =>
+  //     document
+  //       .getElementsByClassName("_5rpu")[0]
+  //       .getAttribute("aria-expanded") === "true"
+  // )
+  // .then(() => {
+  //   console.log('action being pressed');
+  //   page.keyboard.press("Enter");
+  // })
+  // .catch(err => console.log('ERROR', err));
 }
 
 async function applyTags(page, tags) {
